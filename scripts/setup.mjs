@@ -11,36 +11,32 @@ const setup = async () => {
     client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
 
-    const hasData = await client
-      .db('test')
-      .collection('users')
+    const hasFlashcardData = await client
+      .db('cards')
+      .collection('cards')
       .countDocuments();
 
-    if (hasData) {
-      console.log('Database already exists with data');
+    if (hasFlashcardData) {
+      console.log('Flashcard atabase already exists with data');
       client.close();
       return;
     }
 
     const records = [...Array(10)].map(() => {
-      const [fName, lName] = faker.name.findName().split(' ');
-      const username = faker.internet.userName(fName, lName);
-      const email = faker.internet.email(fName, lName);
-      const image = faker.image.people(640, 480, true);
+      const question = faker.lorem.sentence();
+      const answer = faker.lorem.sentence();
+      const category = faker.lorem.word();
 
       return {
-        name: `${fName} ${lName}`,
-        username,
-        email,
-        image,
-        followers: 0,
-        emailVerified: null
+        question,
+        answer,
+        category
       };
     });
 
     const insert = await client
-      .db('test')
-      .collection('users')
+      .db('cards')
+      .collection('cards')
       .insertMany(records);
 
     if (insert.acknowledged) {
