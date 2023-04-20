@@ -10,6 +10,10 @@ const nextConfig = {
       'loremflickr.com'
     ]
   },
+  experimental: {
+    legacyBrowsers: false,
+    browsersListForSwc: true
+  }
 };
 
 module.exports = nextConfig;
